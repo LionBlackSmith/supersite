@@ -58,5 +58,6 @@
             </p>
         </form>
 
-        <form action="fiche_perso.php" id="launch_game"></form>
+        <div id="div_launch"></div>
+        
 </section>

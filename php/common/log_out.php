@@ -39,6 +39,26 @@ if ($game['nj'] <= 1)
     );
     $stmt->bind_param("i", $_SESSION['id_game']);
     $stmt->execute();
+    $stmt->close();   
+
+    $stmt = $db_jeuenergie->prepare
+    (
+        'DELETE 
+        FROM votes
+        WHERE id_game =?'
+    );
+    $stmt->bind_param("i", $_SESSION['id_game']);
+    $stmt->execute();
+    $stmt->close();   
+
+    $stmt = $db_jeuenergie->prepare
+    (
+        'DELETE 
+        FROM past_decisions
+        WHERE id_game =?'
+    );
+    $stmt->bind_param("i", $_SESSION['id_game']);
+    $stmt->execute();
     $stmt->close();     
 }
 else 

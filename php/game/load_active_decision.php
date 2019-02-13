@@ -3,10 +3,10 @@ session_start();
 
 $db_jeuenergie = new mysqli("127.0.0.1", "root", "", "jeuenergie", 3306);
 
-//On detruit le joueur de la DB et on reboot sa session
+//on recupere les nom et description de la decisions en cours et des choix qui lui son associé
 $stmt = $db_jeuenergie->prepare
 (
-    'SELECT d.nom decision, d.description decision_txt, c.nom_choix choix
+    'SELECT d.nom decision, d.description decision_txt, c.nom_choix choix, c.id id_choix
     FROM decision d
     INNER JOIN game g
         ON g.id_decis_active = d.id
@@ -19,21 +19,19 @@ $stmt->execute();
 $res = $stmt->get_result();
 $stmt->close();
 $nbchoix = $res->num_rows;
-$deci = $res->fetch_assoc();
+$deci = $res->fetch_all();
 
-$data['decision'] = $deci['decision'];
-$data['decision_txt'] = $deci['decision_txt'];
-$data['choix'] = "  <p>
-                        <input type='button' class='choix' id='choix_1' name='choix_1' value='".$deci['choix']."'/>    
-                    </p>";
+$data['decision'] = $deci[0][0];
+$data['decision_txt'] = $deci[0][1];
+$data['choix'] = "";
 
-for ($i=2; $i <= $nbchoix; $i++) 
+for ($i=0; $i < $nbchoix; $i++) 
 {
-    $deci = $res->fetch_assoc();
     $data['choix'] .= " <p>
-                            <input type='button' id='choix_".$i."' name='choix_".$i."' value='".$deci['choix']."'/>
+                            <input type='button' class='choix' id='".$deci[$i][3]."' name='choix_".$i."' value='".$deci[$i][2]."'/>
                         </p>";   
 }
-
-
+  
+$db_jeuenergie->close();
+echo json_encode($data);
 ?>

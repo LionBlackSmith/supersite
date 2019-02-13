@@ -76,12 +76,12 @@ $stmt->close();
 
 //Ajout de l'id_host et des id decsision dans la table GAME :
 if(!$stmt = $db_jeuenergie->prepare('UPDATE game 
-                                    SET id_host=?, id_decis_1=?, id_decis_2=?, id_decis_3=?, id_decis_4=? 
+                                    SET id_host=?, id_decis_active=?
                                     WHERE id=?'))
 {
     echo $stmt->error;
 }
-if(!$stmt->bind_param("iiiiii", $_SESSION['id_user'], $dec[0][0], $dec[1][0], $dec[2][0], $dec[3][0], $_SESSION['id_game']))
+if(!$stmt->bind_param("iii", $_SESSION['id_user'], $dec[0][0], $_SESSION['id_game']))
 {
     echo $stmt->error;
 }

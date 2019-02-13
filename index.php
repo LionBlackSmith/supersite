@@ -1,6 +1,4 @@
-<?php 
-session_start();
-?>
+<?php session_start(); ?>
 
 <!DOCTYPE html>
 <html>
@@ -43,39 +41,13 @@ session_start();
                 <p>description du but du jeu</p> 
             </article>    
         </section>
-<?php
 
-$db_jeuenergie = new mysqli("127.0.0.1", "root", "", "jeuenergie", 3306);
-
-//On detruit le joueur de la DB et on reboot sa session
-$stmt = $db_jeuenergie->prepare
-(
-    'SELECT d.nom decision, d.description decision_txt, c.nom_choix choix
-    FROM decision d
-    INNER JOIN game g
-        ON g.id_decis_active = d.id
-    INNER JOIN choice c
-        ON c.id_decision = d.id
-    WHERE g.id =?'
-);
-$stmt->bind_param("i", $_SESSION['id_game']);
-$stmt->execute();
-$res = $stmt->get_result();
-$stmt->close();
-$deci = $res->fetch_assoc();
-var_dump($deci);
-$deci = $res->fetch_assoc();
-var_dump($deci);
-
-
-?>
     </body>
 
     <script>
         
         $(document).ready(function() 
-        {
-            //a refaire                
+        {              
             var id_game = "<?php echo isset($_SESSION['id_game']); ?>";
 
             if(id_game == true) 
@@ -144,8 +116,9 @@ var_dump($deci);
                 log_out();
             }); 
 
-            $(document).on('submit','#launch_game', function()
+            $(document).on('submit','#form_launch_game', function()
             {
+                console.log('click');  
                 launch_game();
             }); 
 
@@ -222,7 +195,7 @@ var_dump($deci);
                     success:function(data)
                     {
                         $("#joueurs").html(data.table);                        
-                        $("#launch_game").html(data.button);
+                        $("#div_launch").html(data.button);
                         if (data.game_state != 'lobby') 
                         {
                             document.location.replace('game.php');
@@ -230,7 +203,7 @@ var_dump($deci);
                     },
                     complete: function(data)
                     {
-                        setTimeout(update_players, 3000);
+                        setTimeout(update_players, 1000);
                     }
                 });
             }  
@@ -242,7 +215,8 @@ var_dump($deci);
                     url : 'php/home/launch_game.php',
                     success:function()
                     {
-                        document.location.replace('game.php');                        
+                        document.location.replace('game.php');
+                                                   
                     }
                 });
             }             
